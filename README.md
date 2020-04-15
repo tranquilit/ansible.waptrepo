@@ -18,7 +18,7 @@ When applied, the configuration enables repository replication for WAPT packages
 
 ```
 cd /etc/ansible/roles/
-git clone https://www.github.com/tranquilit/ansible-waptrepo
+git clone https://www.github.com/tranquilit/ansible.waptrepo
 ```
 
 * add your hosts to Ansible hosts file
