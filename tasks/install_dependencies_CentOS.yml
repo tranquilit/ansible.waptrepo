@@ -1,0 +1,8 @@
+---
+- name: install dependencies
+  yum: pkg={{ item }} state=latest
+  with_items:
+      - epel-release
+      - wget
+      - sudo
+      - nginx

@@ -1,0 +1,55 @@
+---
+- name: "Modify wapt-get.ini : enable_remote_repo - {{ enable_remote_repo }}"
+  ini_file:
+    path: "{{ wapt_get_ini }}"
+    section: repo-sync
+    option: enable_remote_repo
+    value: "{{ enable_remote_repo }}"
+    backup: yes
+
+- name: "Modify wapt-get.ini : local_repo_path - {{ local_repo_path }}"
+  ini_file:
+    path: "{{ wapt_get_ini }}"
+    section: repo-sync
+    option: local_repo_path
+    value: "{{ local_repo_path }}"
+
+- name: "Modify wapt-get.ini : local_repo_time_for_sync_start - {{ local_repo_time_for_sync_start }}"
+  ini_file:
+    path: "{{ wapt_get_ini }}"
+    section: repo-sync
+    option: local_repo_time_for_sync_start
+    value: "{{ local_repo_time_for_sync_start }}"
+
+- name: "Modify wapt-get.ini : local_repo_time_for_sync_end - {{ local_repo_time_for_sync_end }}"
+  ini_file:
+    path: "{{ wapt_get_ini }}"
+    section: repo-sync
+    option: local_repo_time_for_sync_end
+    value: "{{ local_repo_time_for_sync_end }}"
+
+- name: "Modify wapt-get.ini : local_repo_sync_task_period - {{ local_repo_sync_task_period }}"
+  ini_file:
+    path: "{{ wapt_get_ini }}"
+    section: repo-sync
+    option: local_repo_sync_task_period
+    value: "{{ local_repo_sync_task_period }}"
+
+- name: "Modify wapt-get.ini : local_repo_limit_bandwidth - {{ local_repo_limit_bandwidth }}"
+  ini_file:
+    path: "{{ wapt_get_ini }}"
+    section: repo-sync
+    option: local_repo_limit_bandwidth
+    value: "{{ local_repo_limit_bandwidth }}"
+
+- name: "Modify wapt-get.ini : remote_repo_dirs - {{ remote_repo_dirs }}"
+  ini_file:
+    path: "{{ wapt_get_ini }}"
+    section: repo-sync
+    option: remote_repo_dirs
+    value: "{{ remote_repo_dirs }}"
+
+- name: restart waptservice
+  service: name={{item}} state=restarted
+  with_items:
+      - nginx

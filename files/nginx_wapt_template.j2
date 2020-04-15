@@ -1,0 +1,64 @@
+server {
+
+    listen                      80;
+ 
+    listen                      443 ssl;
+    server_name                 _;
+
+    ssl_certificate             "{{ nginx_ssl_path }}cert.pem";
+    ssl_certificate_key         "{{ nginx_ssl_path }}key.pem";
+    ssl_protocols               TLSv1.2;
+    ssl_dhparam                 "{{ nginx_ssl_path }}dhparam.pem";
+    ssl_prefer_server_ciphers   on;
+    ssl_ciphers                 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+    ssl_session_cache           none;
+    ssl_session_tickets         off;
+
+
+    #ssl_client_certificate "/opt/wapt/conf/ca-srvwapt-dev.ad.tranquil.it.crt";
+    #ssl_verify_client optional;
+
+
+    gzip_min_length     1000;
+    gzip_buffers        4 8k;
+    gzip_http_version   1.0;
+    gzip_disable        "msie6";
+    gzip_types          text/plain text/css application/json;
+    gzip_vary           on;
+
+    index index.html;
+
+    location / {
+        proxy_set_header X-Real-IP  $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        client_max_body_size 4096m;
+        client_body_timeout 1800;
+
+        location ~ ^/(wapt/waptsetup-tis.exe|wapt/waptagent.exe|wapt/waptdeploy.exe)$ {
+            root "{{ local_repo_path }}";
+        }
+
+        location ~ ^/(wapt/.*|wapt-host/.*|waptwua/.*)$ {
+    
+            root "{{ local_repo_path }}";
+        }
+
+        location / {
+            proxy_set_header X-Real-IP  $remote_addr;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            client_max_body_size 4096m;
+            client_body_timeout 1800;
+
+            location /wapt-host/Packages {
+                    return 403;
+            }
+
+        }
+    }
+}

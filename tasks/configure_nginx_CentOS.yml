@@ -1,0 +1,59 @@
+---  
+- name: adding WAPT nginx vhost from template
+  template:
+    src: "{{ role_path }}/files/nginx_wapt_template.j2"
+    dest: "{{ centos_nginx_conf }}"
+
+- name: replace default nginx conf file
+  copy:
+    src: "{{ role_path }}/files/nginx.conf"
+    dest: "/etc/nginx/nginx.conf"
+
+- name: "mkdir {{ nginx_ssl_path }}"
+  file:
+    path: "{{ nginx_ssl_path }}"
+    state: directory
+
+- name: mkdir wapt folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: wapt
+    group: nginx
+    mode: 0775
+  with_items:
+  - "{{ local_repo_path }}/wapt/"
+  - "{{ local_repo_path }}/wapt-host/"
+  - "{{ local_repo_path }}/waptwua/"
+
+- name: generate dhparam
+  shell: "openssl dhparam -out {{ nginx_ssl_path }}dhparam.pem 2048"
+  args:
+    warn: false
+
+- name: copy nginx cert
+  copy:
+    src: "{{ role_path }}/files/cert.pem"
+    dest: "{{ nginx_cert }}" 
+
+- name: copy nginx key
+  copy:
+    src: "{{ role_path }}/files/key.pem"
+    dest: "{{ nginx_key }}"
+
+- firewalld:
+    port: 443/tcp
+    zone: public
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: enable nginx server
+  service: name={{item}} enabled=yes
+  with_items:
+      - nginx
+
+- name: start Nginx server services
+  service: name={{item}} state=restarted
+  with_items:
+      - nginx

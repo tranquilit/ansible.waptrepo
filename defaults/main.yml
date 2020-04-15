@@ -1,0 +1,15 @@
+---
+centos_nginx_conf: "/etc/nginx/conf.d/wapt.conf"
+debian_nginx_conf: "/etc/nginx/sites-enabled/wapt.conf"
+nginx_ssl_path: "/etc/nginx/ssl/"
+nginx_cert: "{{ nginx_ssl_path }}cert.pem"
+nginx_key: "{{ nginx_ssl_path }}key.pem"
+wapt_get_ini: "/opt/wapt/wapt-get.ini"
+## repo-sync default values
+enable_remote_repo: "True"
+local_repo_path : "/var/www/html"
+local_repo_time_for_sync_start : "20:30"
+local_repo_time_for_sync_end : "05:30"
+local_repo_sync_task_period : "25"
+local_repo_limit_bandwidth : "4"
+remote_repo_dirs : "wapt,waptwua"
