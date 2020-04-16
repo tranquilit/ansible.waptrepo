@@ -50,6 +50,6 @@
     value: "{{ remote_repo_dirs }}"
 
 - name: restart waptservice
-  service: name={{item}} state=restarted
+  service: name={{ item }} state=restarted
   with_items:
-      - nginx
+    - nginx

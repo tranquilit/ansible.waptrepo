@@ -17,19 +17,19 @@
     group: www-data
     mode: 0775
   with_items:
-  - "{{ local_repo_path }}/wapt/"
-  - "{{ local_repo_path }}/wapt-host/"
-  - "{{ local_repo_path }}/waptwua/"
+    - "{{ local_repo_path }}/wapt/"
+    - "{{ local_repo_path }}/wapt-host/"
+    - "{{ local_repo_path }}/waptwua/"
 
 - name: generate dhparam
-  shell: "openssl dhparam -out {{ nginx_ssl_path }}dhparam.pem 2048"
-  args:
-    warn: false
+  openssl_dhparam:
+    path: "{{ nginx_ssl_path }}dhparams.pem"
+    size: 2048
 
 - name: copy nginx cert
   copy:
     src: "{{ role_path }}/files/cert.pem"
-    dest: "{{ nginx_cert }}" 
+    dest: "{{ nginx_cert }}"
 
 - name: copy nginx key
   copy:
@@ -37,11 +37,11 @@
     dest: "{{ nginx_key }}"
 
 - name: enable nginx services
-  service: name={{item}} enabled=yes
+  service: name={{ item }} enabled=yes
   with_items:
-      - nginx
+    - nginx
 
 - name: start nginx services
-  service: name={{item}} state=restarted
+  service: name={{ item }} state=restarted
   with_items:
-      - nginx
+    - nginx

@@ -1,4 +1,4 @@
----  
+---
 - name: adding WAPT nginx vhost from template
   template:
     src: "{{ role_path }}/files/nginx_wapt_template.j2"
@@ -22,26 +22,27 @@
     group: nginx
     mode: 0775
   with_items:
-  - "{{ local_repo_path }}/wapt/"
-  - "{{ local_repo_path }}/wapt-host/"
-  - "{{ local_repo_path }}/waptwua/"
+    - "{{ local_repo_path }}/wapt/"
+    - "{{ local_repo_path }}/wapt-host/"
+    - "{{ local_repo_path }}/waptwua/"
 
 - name: generate dhparam
-  shell: "openssl dhparam -out {{ nginx_ssl_path }}dhparam.pem 2048"
-  args:
-    warn: false
+  openssl_dhparam:
+    path: "{{ nginx_ssl_path }}dhparams.pem"
+    size: 2048
 
 - name: copy nginx cert
   copy:
     src: "{{ role_path }}/files/cert.pem"
-    dest: "{{ nginx_cert }}" 
+    dest: "{{ nginx_cert }}"
 
 - name: copy nginx key
   copy:
     src: "{{ role_path }}/files/key.pem"
     dest: "{{ nginx_key }}"
 
-- firewalld:
+- name: firewalld open TCP/443
+  firewalld:
     port: 443/tcp
     zone: public
     permanent: yes
@@ -49,11 +50,11 @@
     immediate: yes
 
 - name: enable nginx server
-  service: name={{item}} enabled=yes
+  service: name={{ item }} enabled=yes
   with_items:
-      - nginx
+    - nginx
 
 - name: start Nginx server services
-  service: name={{item}} state=restarted
+  service: name={{ item }} state=restarted
   with_items:
-      - nginx
+    - nginx

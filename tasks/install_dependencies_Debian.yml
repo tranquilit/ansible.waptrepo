@@ -1,24 +1,22 @@
 ---
 - name: apt-get update
-  shell: "apt-get update"
-  args:
-    warn: false
+  apt:
+    update_cache: yes
 
 - name: install dependencies
-  apt: name={{item}} state=latest
+  apt: name={{ item }} state=present
   with_items:
-     - apt-transport-https      
-     - dirmngr
-     - nginx
-     - dialog
-     - python-tz
-     - cabextract
-     - sudo
-     - python-psutil
-     - krb5-user
-     - msktutil
-     - python-pyparsing
-     - lsb-release
+    - apt-transport-https
+    - dirmngr
+    - nginx
+    - dialog
+    - python-tz
+    - cabextract
+    - sudo
+    - python-psutil
+    - krb5-user
+    - msktutil
+    - python-pyparsing
+    - lsb-release
   environment:
     DEBIAN_FRONTEND: noninteractive
-
